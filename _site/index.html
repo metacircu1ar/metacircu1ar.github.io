@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Implementing a simple object system from scratch in Ruby</title>
+<meta name="generator" content="Jekyll v4.3.4" />
+<meta property="og:title" content="Implementing a simple object system from scratch in Ruby" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-12-14T00:00:00+04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Implementing a simple object system from scratch in Ruby" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","dateModified":"2024-12-14T00:00:00+04:00","datePublished":"2024-12-14T00:00:00+04:00","headline":"Implementing a simple object system from scratch in Ruby","url":"http://localhost:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/"></a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/">Implementing a simple object system from scratch in Ruby</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Implementing a simple object system from scratch in Ruby</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-12-14T00:00:00+04:00" itemprop="datePublished">Dec 14, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <blockquote>
+  <p>“What I cannot create, I do not understand.” – Richard Feynman</p>
+</blockquote>
+
+<p>What I found out over time, is that the best way to really learn something is to implement it yourself. What we’re going to do is implement an object system from scratch. We won’t be using classes and just build it from anonymous functions and hash tables. We’ll implement method lookup, prototypical inheritance, mixins and some form of metaprogramming. I’m going to use Ruby for this, because it’s one of my favorite languages and it’s very expressive and concise.</p>
+
+<p>Let’s start with writing a constructor function. It takes some arguments, creates an object and returns it. Let’s call this function <code class="language-plaintext highlighter-rouge">initialize</code>. It will return a hash object, which will represent an instance of some hypothetical class. For now, it will return an empty hash, which represents an object without methods.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">initialize</span>
+  <span class="p">{</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>We will have constructors for objects of different classes, so we need to organize our code in some way. Let’s create a module, which will serve as a namespace for our constructor and other utility functions related to our class. We’ll name the module the same way we would name our class. For example:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># We define a module which will be responsible for storing </span>
+<span class="c1"># the constructor function for the Entity class.</span>
+<span class="k">module</span> <span class="nn">Entity</span>
+  <span class="c1"># Constructor function for the Entity class.</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># Module for storing the Player class related functions.</span>
+<span class="k">module</span> <span class="nn">Player</span>
+  <span class="c1"># Constructor function for the Player class.</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>We’ll use hash keys as method names and anonymous functions as methods. We could use strings(such as <code class="language-plaintext highlighter-rouge">"greet"</code>) as method names, but Ruby has symbols(such as <code class="language-plaintext highlighter-rouge">:greet</code>) and we’ll use those instead, because it’s a bit cleaner. We can define a method like this:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">GreetingClass</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span>
+  <span class="c1"># Returns a hash with a single key-value pair, </span>
+  <span class="c1"># where the key is a symbol :greet and the value </span>
+  <span class="c1"># is an anonymous function which prints "Hello" when called.</span>
+    <span class="p">{</span>
+      <span class="ss">:greet</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">"Hello"</span> <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># We can create an object of our class by calling </span>
+<span class="c1"># the constructor.</span>
+<span class="n">greeting_object</span> <span class="o">=</span> <span class="no">GreetingClass</span><span class="p">.</span><span class="nf">initialize</span>
+<span class="c1"># We can call the method on our object by looking up </span>
+<span class="c1"># the key in the hash table and calling the anonymous </span>
+<span class="c1"># function which is the value of that key.</span>
+<span class="n">greeting_object</span><span class="p">[</span><span class="ss">:greet</span><span class="p">].</span><span class="nf">call</span>
+</code></pre></div></div>
+<p>All local variables we declare in the constructor have private visibility by default:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">GreetingClass</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span>
+    <span class="c1"># Private instance variable of our object invisible </span>
+    <span class="c1"># from the outside, unless we expose it using methods.</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">"Hello"</span>
+    <span class="p">{</span>
+      <span class="c1"># We can access the message variable inside this </span>
+      <span class="c1"># anonymous function, because it's a closure.</span>
+      <span class="ss">:greet</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="nb">puts</span> <span class="n">message</span> <span class="p">}</span> 
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>The public interface of our object is only exposed through the methods we define on the object. We can define methods on the object by adding them as keys to the hash table we return from the constructor. For example, let’s create a public setter for the message:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">GreetingClass</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s2">"Hello"</span>
+    <span class="p">{</span>
+      <span class="ss">:greet</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="nb">puts</span> <span class="n">message</span> <span class="p">},</span>
+      <span class="c1"># Updates the message variable.</span>
+      <span class="ss">:set_message</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">new_message</span><span class="p">)</span> <span class="p">{</span> <span class="n">message</span> <span class="o">=</span> <span class="n">new_message</span> <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">greeting_object</span> <span class="o">=</span> <span class="no">GreetingClass</span><span class="p">.</span><span class="nf">initialize</span>
+<span class="nb">puts</span> <span class="n">greeting_object</span><span class="p">[</span><span class="ss">:greet</span><span class="p">].</span><span class="nf">call</span> <span class="c1"># =&gt; Hello</span>
+
+<span class="c1"># Sets the message to "Hi"</span>
+<span class="n">greeting_object</span><span class="p">[</span><span class="ss">:set_message</span><span class="p">].</span><span class="nf">call</span><span class="p">(</span><span class="s2">"Hi"</span><span class="p">)</span> 
+<span class="nb">puts</span> <span class="n">greeting_object</span><span class="p">[</span><span class="ss">:greet</span><span class="p">].</span><span class="nf">call</span> <span class="c1"># =&gt; Hi</span>
+</code></pre></div></div>
+<p>Note, that we can’t access the <code class="language-plaintext highlighter-rouge">message</code> variable directly from the outside of our constructor function, because it’s a local variable in the constructor. We can only access it through the methods we define on the object. Anonmyous functions we store in the hash object are closures, so they capture the environment in which they were defined. That’s why the <code class="language-plaintext highlighter-rouge">greet</code> and <code class="language-plaintext highlighter-rouge">:set_message</code> methods can access the <code class="language-plaintext highlighter-rouge">message</code> variable, even though it’s not passed as an argument to these methods directly. This way we can encapsulate the state of our object and expose only the methods we want to be public. When we change the state of the object, this change is reflected in all methods, because they all share the same environment in which the closures were defined, so they all share a reference to the same <code class="language-plaintext highlighter-rouge">message</code> variable. We just simulated encapsulation and instance variables.</p>
+
+<p>Let’s create one more simple class as an example of our approach:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define a module for demonstrating arithmetic operations.</span>
+<span class="k">module</span> <span class="nn">ArithmeticExampleClass</span>
+  <span class="c1"># This class exposes arithmetic methods like add, </span>
+  <span class="c1"># multiply, and setters for operands a and b.</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="c1"># Encapsulate 'a' and 'b' variables.</span>
+    <span class="c1"># a and b represent internal state of our object.</span>
+    <span class="p">{</span>
+      <span class="ss">add: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">},</span>              <span class="c1"># Adds a and b.</span>
+      <span class="ss">multiply: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="p">},</span>         <span class="c1"># Multiplies a and b.</span>
+      <span class="ss">set_a: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_a</span><span class="p">)</span> <span class="p">{</span> <span class="n">a</span> <span class="o">=</span> <span class="n">new_a</span> <span class="p">},</span> <span class="c1"># Setter for a.</span>
+      <span class="ss">set_b: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_b</span><span class="p">)</span> <span class="p">{</span> <span class="n">b</span> <span class="o">=</span> <span class="n">new_b</span> <span class="p">}</span>  <span class="c1"># Setter for b.</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># Create an instance of ArithmeticExampleClass with initial </span>
+<span class="c1"># values for a and b.</span>
+<span class="n">object</span> <span class="o">=</span> <span class="no">ArithmeticExampleClass</span><span class="p">.</span><span class="nf">initialize</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Call arithmetic methods to demonstrate functionality.</span>
+<span class="nb">puts</span> <span class="s2">"Addition result: </span><span class="si">#{</span><span class="n">object</span><span class="p">[</span><span class="ss">:add</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; 7</span>
+<span class="nb">puts</span> <span class="s2">"Multiplication result: </span><span class="si">#{</span><span class="n">object</span><span class="p">[</span><span class="ss">:multiply</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; 12</span>
+
+<span class="c1"># Update values of a and b to demonstrate mutable setters.</span>
+<span class="n">object</span><span class="p">[</span><span class="ss">:set_a</span><span class="p">].</span><span class="nf">call</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">object</span><span class="p">[</span><span class="ss">:set_b</span><span class="p">].</span><span class="nf">call</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Call methods again with updated values.</span>
+<span class="nb">puts</span> <span class="s2">"Addition result: </span><span class="si">#{</span><span class="n">object</span><span class="p">[</span><span class="ss">:add</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; 30</span>
+<span class="nb">puts</span> <span class="s2">"Multiplication result: </span><span class="si">#{</span><span class="n">object</span><span class="p">[</span><span class="ss">:multiply</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; 200</span>
+</code></pre></div></div>
+
+<p>In class-based OOP we use classes, which delegate behavior to each other using inheritance. Inheritance is a fixed form of delegation. We don’t have classes, but we still want to achieve delegation, so what we do instead is link our objects using prototypes. Instead of class A inheriting from class B, we’ll have object B set as a prototype of object A.</p>
+
+<p>Built-in Ruby hash class is insufficient for our needs, because its <code class="language-plaintext highlighter-rouge">[]</code> method only looks up methods only in the hash itself, but we also want to look up methods in the prototype object. We can create our own hash class which will delegate the method lookup to the prototype object if the method is not found in current object.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define a HashObject class for prototype-based </span>
+<span class="c1"># inheritance and method lookup.</span>
+<span class="c1"># We base it on built-in Ruby Hash class and </span>
+<span class="c1"># customize some operations for our needs.</span>
+<span class="k">class</span> <span class="nc">HashObject</span> <span class="o">&lt;</span> <span class="no">Hash</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">initial_hash</span><span class="p">)</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">merge!</span><span class="p">(</span><span class="n">initial_hash</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="c1"># Override the [] method to allow prototype-based </span>
+  <span class="c1"># method lookup.</span>
+  <span class="c1"># This [] method first looks for the key(method name) </span>
+  <span class="c1"># in the current object. If the method is found, it returns </span>
+  <span class="c1"># the function associated with the method.</span>
+  <span class="c1"># If the method is not found, it checks the :__prototype </span>
+  <span class="c1"># object for the method.</span>
+  <span class="c1"># :__prototype key links to the prototype object, which was </span>
+  <span class="c1"># set using the 'inherit' method below.</span>
+  <span class="c1"># The method lookup continues recursively until the method </span>
+  <span class="c1"># is found or the chain ends.</span>
+  <span class="k">def</span> <span class="nf">[]</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span> <span class="o">||</span> <span class="k">super</span><span class="p">(</span><span class="ss">:__prototype</span><span class="p">)</span><span class="o">&amp;</span><span class="p">.</span><span class="nf">[</span><span class="p">](</span><span class="nb">method</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Links a prototype object to the current object by </span>
+  <span class="c1"># setting the :__prototype key.</span>
+  <span class="c1"># This allows the current object to delegate method </span>
+  <span class="c1"># lookups to the prototype.</span>
+  <span class="k">def</span> <span class="nf">inherit</span><span class="p">(</span><span class="n">prototype_object</span><span class="p">)</span>
+    <span class="nb">self</span><span class="p">[</span><span class="ss">:__prototype</span><span class="p">]</span> <span class="o">=</span> <span class="n">prototype_object</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Explicitly fetches a method or key from the </span>
+  <span class="c1"># prototype without looking in the current object.</span>
+  <span class="c1"># The method looks for the key in the prototype </span>
+  <span class="c1"># object (if it exists) and returns its value.</span>
+  <span class="c1"># See the example below for usage.</span>
+  <span class="k">def</span> <span class="nf">proto</span><span class="p">(</span><span class="nb">method</span><span class="p">)</span>
+    <span class="nb">self</span><span class="p">[</span><span class="ss">:__prototype</span><span class="p">]</span><span class="o">&amp;</span><span class="p">.</span><span class="nf">[</span><span class="p">](</span><span class="nb">method</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>To put it another way, we just create a singly linked list of objects, where each object has a reference to the next object in the chain. When we look up a method on an object, we first look in the object itself, and if the method is not found, we look in the prototype object. If the method is not found in the prototype object, we look in the prototype of the prototype and so on, until we find the method or reach the end of the chain.</p>
+
+<p>Let’s build something more complex. Here are some module definitions:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Define a module Entity that serves as a base </span>
+<span class="c1"># class for other objects.</span>
+<span class="c1"># This is a generic entity that provides methods </span>
+<span class="c1"># to get and set the name.</span>
+<span class="k">module</span> <span class="nn">Entity</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span>
+    <span class="c1"># Encapsulate the 'name' variable to simulate </span>
+    <span class="c1"># private instance-like behavior.</span>
+    <span class="nb">name</span> <span class="o">=</span> <span class="s2">"Generic entity"</span>
+    <span class="no">HashObject</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+      <span class="c1"># Getter for the name.</span>
+      <span class="ss">get_name: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="nb">name</span> <span class="p">},</span> 
+      <span class="c1"># Setter for the name.</span>
+      <span class="ss">set_name: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span> <span class="p">{</span> <span class="nb">name</span> <span class="o">=</span> <span class="n">new_name</span> <span class="p">}</span> 
+    <span class="p">})</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># Define a Player module, which will be able </span>
+<span class="c1"># to create Player objects.</span>
+<span class="c1"># Player extends Entity by modifying or adding </span>
+<span class="c1"># additional functionality.</span>
+<span class="k">module</span> <span class="nn">Player</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span>
+    <span class="c1"># 'itself' variable is a reference to the </span>
+    <span class="c1"># object itself, allowing access to the object </span>
+    <span class="c1"># inside its own methods, like 'get_name' method </span>
+    <span class="c1"># below. This is useful for self-referential calls.</span>
+    <span class="n">itself</span> <span class="o">=</span> <span class="no">HashObject</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+      <span class="c1"># The get_name method appends " (player)" to </span>
+      <span class="c1"># the name from the prototype (Entity).</span>
+      <span class="c1"># itself.proto(:get_name) is similar to super() </span>
+      <span class="c1"># method call in Ruby.</span>
+      <span class="ss">get_name: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">itself</span><span class="p">.</span><span class="nf">proto</span><span class="p">(</span><span class="ss">:get_name</span><span class="p">).</span><span class="nf">call</span> <span class="o">+</span> <span class="s2">" (player)"</span> <span class="p">}</span> 
+    <span class="p">})</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="c1"># Define a Position module for objects that can </span>
+<span class="c1"># have a 2D position.</span>
+<span class="c1"># This module manages the x and y coordinates </span>
+<span class="c1"># of the object.</span>
+<span class="k">module</span> <span class="nn">Position</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">initialize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="c1"># Encapsulate 'x' and 'y' variables to act </span>
+    <span class="c1"># as private state.</span>
+    <span class="no">HashObject</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
+      <span class="c1"># Getter for x-coordinate.</span>
+      <span class="ss">get_x: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">x</span> <span class="p">},</span>
+      <span class="c1"># Getter for y-coordinate.</span>
+      <span class="ss">get_y: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">y</span> <span class="p">},</span> 
+      <span class="c1"># Setter for x-coordinate.</span>
+      <span class="ss">set_x: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_x</span><span class="p">)</span> <span class="p">{</span> <span class="n">x</span> <span class="o">=</span> <span class="n">new_x</span> <span class="p">},</span> 
+      <span class="c1"># Setter for y-coordinate.</span>
+      <span class="ss">set_y: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_y</span><span class="p">)</span> <span class="p">{</span> <span class="n">y</span> <span class="o">=</span> <span class="n">new_y</span> <span class="p">}</span>
+    <span class="p">})</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>And here are some usage examples:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create an Entity instance.</span>
+<span class="n">entity</span> <span class="o">=</span> <span class="no">Entity</span><span class="p">.</span><span class="nf">initialize</span>
+
+<span class="c1"># Create a Player instance and inherit methods </span>
+<span class="c1"># from the Entity prototype.</span>
+<span class="c1"># Inheritance means Player will be able to access </span>
+<span class="c1"># methods defined in Entity.</span>
+<span class="n">player</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">initialize</span><span class="p">.</span><span class="nf">inherit</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+
+<span class="c1"># Test name functionality in Player by calling </span>
+<span class="c1"># inherited 'get_name' method.</span>
+<span class="nb">puts</span> <span class="s2">"Player name: </span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_name</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; "Generic entity (player)"</span>
+<span class="n">player</span><span class="p">[</span><span class="ss">:set_name</span><span class="p">].</span><span class="nf">call</span><span class="p">(</span><span class="s2">"John"</span><span class="p">)</span> <span class="c1"># Update name via Player's setter.</span>
+<span class="nb">puts</span> <span class="s2">"Player name: </span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_name</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; "John (player)"</span>
+
+<span class="c1"># Now create an inheritance chain: </span>
+<span class="c1"># Player -&gt; Entity -&gt; Position.</span>
+<span class="c1"># Entity inherits from Position and Player </span>
+<span class="c1"># inherits from Entity.</span>
+<span class="c1"># This allows Player to inherit methods </span>
+<span class="c1"># from both Entity and Position.</span>
+<span class="c1"># Prototype method lookup will traverse the </span>
+<span class="c1"># inheritance chain to find methods.</span>
+<span class="n">player</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">initialize</span>
+<span class="n">entity</span> <span class="o">=</span> <span class="no">Entity</span><span class="p">.</span><span class="nf">initialize</span>
+<span class="n">position</span> <span class="o">=</span> <span class="no">Position</span><span class="p">.</span><span class="nf">initialize</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Chain inheritance by making Entity inherit </span>
+<span class="c1"># Position, and then Player inherits Entity.</span>
+<span class="n">entity</span><span class="p">.</span><span class="nf">inherit</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+<span class="n">player</span><span class="p">.</span><span class="nf">inherit</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+
+<span class="c1"># Access methods through the inheritance chain, </span>
+<span class="c1"># now Player has access to Position's methods.</span>
+<span class="nb">puts</span> <span class="s2">"Player position via inheritance chain: (</span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_x</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">, </span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_y</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">)"</span> <span class="c1"># =&gt; (10, 20)</span>
+</code></pre></div></div>
+<p>We can very easily implement mixins, because our objects are just hash tables. We can merge two hash tables together to mix in methods from one object into another.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HashObject</span> <span class="o">&lt;</span> <span class="no">Hash</span>
+  <span class="c1"># Mixes in another object methods into the </span>
+  <span class="c1"># current object.</span>
+  <span class="c1"># This allows the extension of an object </span>
+  <span class="c1"># with additional methods.</span>
+  <span class="k">def</span> <span class="nf">mixin</span><span class="p">(</span><span class="n">object</span><span class="p">)</span>
+    <span class="nb">self</span><span class="p">.</span><span class="nf">merge!</span><span class="p">(</span><span class="n">object</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Usage example:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">player</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">initialize</span>
+
+<span class="c1"># Create a Position instance with coordinates (10, 20).</span>
+<span class="n">position</span> <span class="o">=</span> <span class="no">Position</span><span class="p">.</span><span class="nf">initialize</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="c1"># Mix in the Position object into Player to add </span>
+<span class="c1"># position-related methods.</span>
+<span class="n">player</span><span class="p">.</span><span class="nf">mixin</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+
+<span class="c1"># Access mixed-in position methods (get_x and get_y) </span>
+<span class="c1"># for the Player instance.</span>
+<span class="nb">puts</span> <span class="s2">"Player position via mixin: (</span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_x</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">, </span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_y</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">)"</span> <span class="c1"># =&gt; (10, 20)</span>
+</code></pre></div></div>
+<p>As a final example, let’s add some form of metaprogramming to our object system. We’ll use metaprogramming to dynamically create methods for our objects. Let’s create a version of Ruby’s <code class="language-plaintext highlighter-rouge">attr_accessor</code> method, which generates getter and setter methods for attributes. For example, given the <code class="language-plaintext highlighter-rouge">:name</code> attribute, we will generate <code class="language-plaintext highlighter-rouge">get_name</code> and <code class="language-plaintext highlighter-rouge">set_name</code> methods for our object.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HashObject</span> <span class="o">&lt;</span> <span class="no">Hash</span>
+  <span class="c1"># Define a method to add attr_accessor functionality.</span>
+  <span class="k">def</span> <span class="nf">attr_accessor</span><span class="p">(</span><span class="o">*</span><span class="n">attributes</span><span class="p">)</span>
+    <span class="n">attributes</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="kp">attr</span><span class="o">|</span>
+      <span class="n">state</span> <span class="o">=</span> <span class="kp">nil</span>
+      <span class="nb">self</span><span class="p">.</span><span class="nf">merge!</span><span class="p">({</span>
+        <span class="s2">"get_</span><span class="si">#{</span><span class="kp">attr</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">to_sym</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">state</span> <span class="p">},</span>
+        <span class="s2">"set_</span><span class="si">#{</span><span class="kp">attr</span><span class="si">}</span><span class="s2">"</span><span class="p">.</span><span class="nf">to_sym</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">new_value</span><span class="p">)</span> <span class="p">{</span> <span class="n">state</span> <span class="o">=</span> <span class="n">new_value</span> <span class="p">}</span>
+      <span class="p">})</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>Usage example:</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">player</span> <span class="o">=</span> <span class="no">Player</span><span class="p">.</span><span class="nf">initialize</span>
+
+<span class="c1"># Generate getter and setter methods for </span>
+<span class="c1"># health and strength attributes.</span>
+<span class="n">player</span><span class="p">.</span><span class="nf">attr_accessor</span><span class="p">(</span><span class="ss">:health</span><span class="p">,</span> <span class="ss">:strength</span><span class="p">)</span> 
+<span class="n">player</span><span class="p">[</span><span class="ss">:set_health</span><span class="p">].</span><span class="nf">call</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>  <span class="c1"># Set health to 100.</span>
+<span class="n">player</span><span class="p">[</span><span class="ss">:set_strength</span><span class="p">].</span><span class="nf">call</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>  <span class="c1"># Set strength to 50.</span>
+<span class="nb">puts</span> <span class="s2">"Player health: </span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_health</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span>  <span class="c1"># =&gt; 100</span>
+<span class="nb">puts</span> <span class="s2">"Player strength: </span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_strength</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; 50</span>
+</code></pre></div></div>
+
+<p>Here is a <a href="https://gist.github.com/metacircu1ar/ce887fef160338f763a6a79c99b85c41">link</a> to the complete code listing with examples and comments.</p>
+
+  </div><a class="u-url" href="/" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading"></h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name"></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
