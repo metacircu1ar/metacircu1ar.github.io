@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Implementing a simple object system from scratch in Ruby"
-date: 2024-12-14
+date: 2024-12-14 01:40:27 +0400
 ---
 > "What I cannot create, I do not understand." -- Richard Feynman
 
