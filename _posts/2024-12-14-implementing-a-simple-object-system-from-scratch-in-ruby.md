@@ -104,10 +104,10 @@ module ArithmeticExampleClass
     # Encapsulate 'a' and 'b' variables.
     # a and b represent internal state of our object.
     {
-      add: -> { a + b },              # Adds a and b.
-      multiply: -> { a * b },         # Multiplies a and b.
-      set_a: ->(new_a) { a = new_a }, # Setter for a.
-      set_b: ->(new_b) { b = new_b }  # Setter for b.
+      :add => -> { a + b },              # Adds a and b.
+      :multiply => -> { a * b },         # Multiplies a and b.
+      :set_a => ->(new_a) { a = new_a }, # Setter for a.
+      :set_b => ->(new_b) { b = new_b }  # Setter for b.
     }
   end
 end
@@ -191,9 +191,9 @@ module Entity
     name = "Generic entity"
     HashObject.new({
       # Getter for the name.
-      get_name: -> { name }, 
+      :get_name => -> { name }, 
       # Setter for the name.
-      set_name: ->(new_name) { name = new_name } 
+      :set_name => ->(new_name) { name = new_name } 
     })
   end
 end
@@ -213,7 +213,7 @@ module Player
       # the name from the prototype (Entity).
       # itself.proto(:get_name) is similar to super() 
       # method call in Ruby.
-      get_name: -> { itself.proto(:get_name).call + " (player)" } 
+      :get_name => -> { itself.proto(:get_name).call + " (player)" } 
     })
   end
 end
@@ -228,13 +228,13 @@ module Position
     # as private state.
     HashObject.new({
       # Getter for x-coordinate.
-      get_x: -> { x },
+      :get_x => -> { x },
       # Getter for y-coordinate.
-      get_y: -> { y }, 
+      :get_y => -> { y }, 
       # Setter for x-coordinate.
-      set_x: ->(new_x) { x = new_x }, 
+      :set_x => ->(new_x) { x = new_x }, 
       # Setter for y-coordinate.
-      set_y: ->(new_y) { y = new_y }
+      :set_y => ->(new_y) { y = new_y }
     })
   end
 end
@@ -332,4 +332,4 @@ puts "Player health: #{player[:get_health].call}"  # => 100
 puts "Player strength: #{player[:get_strength].call}" # => 50
 ```
 
-Here is a [link](https://gist.github.com/metacircu1ar/ce887fef160338f763a6a79c99b85c41) to the complete code listing with examples and comments.
+Here is a [link](https://gist.github.com/metacircu1ar/49a71d8955b1437856b280d201e0ffc3) to the complete code listing with examples and comments.
