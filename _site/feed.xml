@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://localhost:4001/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4001/" rel="alternate" type="text/html" /><updated>2024-12-14T01:50:22+04:00</updated><id>http://localhost:4001/feed.xml</id><entry><title type="html">Implementing a simple object system from scratch in Ruby</title><link href="http://localhost:4001/2024/12/14/implementing-a-simple-object-system-from-scratch-in-ruby.html" rel="alternate" type="text/html" title="Implementing a simple object system from scratch in Ruby" /><published>2024-12-14T01:40:27+04:00</published><updated>2024-12-14T01:40:27+04:00</updated><id>http://localhost:4001/2024/12/14/implementing-a-simple-object-system-from-scratch-in-ruby</id><content type="html" xml:base="http://localhost:4001/2024/12/14/implementing-a-simple-object-system-from-scratch-in-ruby.html"><![CDATA[<blockquote>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-12-17T00:26:11+04:00</updated><id>http://localhost:4000/feed.xml</id><entry><title type="html">Implementing a simple object system from scratch in Ruby</title><link href="http://localhost:4000/2024/12/14/implementing-a-simple-object-system-from-scratch-in-ruby.html" rel="alternate" type="text/html" title="Implementing a simple object system from scratch in Ruby" /><published>2024-12-14T01:40:27+04:00</published><updated>2024-12-14T01:40:27+04:00</updated><id>http://localhost:4000/2024/12/14/implementing-a-simple-object-system-from-scratch-in-ruby</id><content type="html" xml:base="http://localhost:4000/2024/12/14/implementing-a-simple-object-system-from-scratch-in-ruby.html"><![CDATA[<blockquote>
   <p>“What I cannot create, I do not understand.” – Richard Feynman</p>
 </blockquote>
 
@@ -95,10 +95,10 @@
     <span class="c1"># Encapsulate 'a' and 'b' variables.</span>
     <span class="c1"># a and b represent internal state of our object.</span>
     <span class="p">{</span>
-      <span class="ss">add: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">},</span>              <span class="c1"># Adds a and b.</span>
-      <span class="ss">multiply: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="p">},</span>         <span class="c1"># Multiplies a and b.</span>
-      <span class="ss">set_a: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_a</span><span class="p">)</span> <span class="p">{</span> <span class="n">a</span> <span class="o">=</span> <span class="n">new_a</span> <span class="p">},</span> <span class="c1"># Setter for a.</span>
-      <span class="ss">set_b: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_b</span><span class="p">)</span> <span class="p">{</span> <span class="n">b</span> <span class="o">=</span> <span class="n">new_b</span> <span class="p">}</span>  <span class="c1"># Setter for b.</span>
+      <span class="ss">:add</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="p">},</span>              <span class="c1"># Adds a and b.</span>
+      <span class="ss">:multiply</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span> <span class="p">},</span>         <span class="c1"># Multiplies a and b.</span>
+      <span class="ss">:set_a</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">new_a</span><span class="p">)</span> <span class="p">{</span> <span class="n">a</span> <span class="o">=</span> <span class="n">new_a</span> <span class="p">},</span> <span class="c1"># Setter for a.</span>
+      <span class="ss">:set_b</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">new_b</span><span class="p">)</span> <span class="p">{</span> <span class="n">b</span> <span class="o">=</span> <span class="n">new_b</span> <span class="p">}</span>  <span class="c1"># Setter for b.</span>
     <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -180,9 +180,9 @@
     <span class="nb">name</span> <span class="o">=</span> <span class="s2">"Generic entity"</span>
     <span class="no">HashObject</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
       <span class="c1"># Getter for the name.</span>
-      <span class="ss">get_name: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="nb">name</span> <span class="p">},</span> 
+      <span class="ss">:get_name</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="nb">name</span> <span class="p">},</span> 
       <span class="c1"># Setter for the name.</span>
-      <span class="ss">set_name: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span> <span class="p">{</span> <span class="nb">name</span> <span class="o">=</span> <span class="n">new_name</span> <span class="p">}</span> 
+      <span class="ss">:set_name</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span> <span class="p">{</span> <span class="nb">name</span> <span class="o">=</span> <span class="n">new_name</span> <span class="p">}</span> 
     <span class="p">})</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -202,7 +202,7 @@
       <span class="c1"># the name from the prototype (Entity).</span>
       <span class="c1"># itself.proto(:get_name) is similar to super() </span>
       <span class="c1"># method call in Ruby.</span>
-      <span class="ss">get_name: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">itself</span><span class="p">.</span><span class="nf">proto</span><span class="p">(</span><span class="ss">:get_name</span><span class="p">).</span><span class="nf">call</span> <span class="o">+</span> <span class="s2">" (player)"</span> <span class="p">}</span> 
+      <span class="ss">:get_name</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">itself</span><span class="p">.</span><span class="nf">proto</span><span class="p">(</span><span class="ss">:get_name</span><span class="p">).</span><span class="nf">call</span> <span class="o">+</span> <span class="s2">" (player)"</span> <span class="p">}</span> 
     <span class="p">})</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -217,13 +217,13 @@
     <span class="c1"># as private state.</span>
     <span class="no">HashObject</span><span class="p">.</span><span class="nf">new</span><span class="p">({</span>
       <span class="c1"># Getter for x-coordinate.</span>
-      <span class="ss">get_x: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">x</span> <span class="p">},</span>
+      <span class="ss">:get_x</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">x</span> <span class="p">},</span>
       <span class="c1"># Getter for y-coordinate.</span>
-      <span class="ss">get_y: </span><span class="o">-&gt;</span> <span class="p">{</span> <span class="n">y</span> <span class="p">},</span> 
+      <span class="ss">:get_y</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">y</span> <span class="p">},</span> 
       <span class="c1"># Setter for x-coordinate.</span>
-      <span class="ss">set_x: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_x</span><span class="p">)</span> <span class="p">{</span> <span class="n">x</span> <span class="o">=</span> <span class="n">new_x</span> <span class="p">},</span> 
+      <span class="ss">:set_x</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">new_x</span><span class="p">)</span> <span class="p">{</span> <span class="n">x</span> <span class="o">=</span> <span class="n">new_x</span> <span class="p">},</span> 
       <span class="c1"># Setter for y-coordinate.</span>
-      <span class="ss">set_y: </span><span class="o">-&gt;</span><span class="p">(</span><span class="n">new_y</span><span class="p">)</span> <span class="p">{</span> <span class="n">y</span> <span class="o">=</span> <span class="n">new_y</span> <span class="p">}</span>
+      <span class="ss">:set_y</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">new_y</span><span class="p">)</span> <span class="p">{</span> <span class="n">y</span> <span class="o">=</span> <span class="n">new_y</span> <span class="p">}</span>
     <span class="p">})</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -316,4 +316,4 @@
 <span class="nb">puts</span> <span class="s2">"Player strength: </span><span class="si">#{</span><span class="n">player</span><span class="p">[</span><span class="ss">:get_strength</span><span class="p">].</span><span class="nf">call</span><span class="si">}</span><span class="s2">"</span> <span class="c1"># =&gt; 50</span>
 </code></pre></div></div>
 
-<p>Here is a <a href="https://gist.github.com/metacircu1ar/ce887fef160338f763a6a79c99b85c41">link</a> to the complete code listing with examples and comments.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[“What I cannot create, I do not understand.” – Richard Feynman]]></summary></entry></feed>
+<p>Here is a <a href="https://gist.github.com/metacircu1ar/49a71d8955b1437856b280d201e0ffc3">link</a> to the complete code listing with examples and comments.</p>]]></content><author><name></name></author><summary type="html"><![CDATA[“What I cannot create, I do not understand.” – Richard Feynman]]></summary></entry></feed>

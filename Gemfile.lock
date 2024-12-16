@@ -171,6 +171,7 @@ PLATFORMS
 
 DEPENDENCIES
   jekyll
+  jekyll-feed
   minima
 
 BUNDLED WITH
