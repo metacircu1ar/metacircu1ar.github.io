@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Max Tikhomirov — Résumé</title>
+<meta name="author" content="Max Tikhomirov">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Max Tikhomirov — AI-first Senior Software Engineer. Cross-platform systems, AI agent tooling, products shipped solo.">
+<style>
+  @font-face { font-family: "Inter"; font-weight: 400; font-style: normal; src: url("fonts/Inter-Regular.ttf") format("truetype"); }
+  @font-face { font-family: "Inter"; font-weight: 400; font-style: italic; src: url("fonts/Inter-Italic.ttf") format("truetype"); }
+  @font-face { font-family: "Inter"; font-weight: 500; font-style: normal; src: url("fonts/Inter-Medium.ttf") format("truetype"); }
+  @font-face { font-family: "Inter"; font-weight: 600; font-style: normal; src: url("fonts/Inter-SemiBold.ttf") format("truetype"); }
+  @font-face { font-family: "Inter"; font-weight: 700; font-style: normal; src: url("fonts/Inter-Bold.ttf") format("truetype"); }
+
+  /* Design tokens */
+  :root {
+    --ink: #15181c;          /* name, headings, organisations */
+    --text: #2b3038;         /* body copy */
+    --muted: #5f6672;        /* dates, locations, context lines */
+    --faint: #9aa1ab;        /* separators */
+    --rule: #d5dae1;         /* hairlines */
+    --accent: #1e4d80;       /* ink blue: section labels, roles, links */
+    --rail: 1.08in;          /* left label column */
+    --gutter: 0.26in;
+  }
+
+  @page { size: Letter; margin: 0.56in 0.62in 0.56in 0.62in; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.05pt;
+    line-height: 1.45;
+    color: var(--text);
+    font-feature-settings: "kern", "liga", "tnum" 0, "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: geometricPrecision;
+  }
+  a { color: inherit; text-decoration: none; }
+  p { margin: 0; }
+  .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  .fig { font-weight: 600; color: var(--ink); }
+
+  /* ---------- Header ---------- */
+  header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 0.4in;
+    align-items: end;
+    padding-bottom: 11pt;
+    border-bottom: 0.9pt solid var(--ink);
+  }
+  h1 {
+    margin: 0 0 3pt;
+    font-size: 27pt;
+    line-height: 1.02;
+    font-weight: 600;
+    letter-spacing: -0.028em;
+    color: var(--ink);
+  }
+  .title {
+    font-size: 11pt;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.005em;
+    margin-bottom: 2pt;
+  }
+  .focus { font-size: 9pt; color: var(--muted); margin-bottom: 7pt; }
+  .stack { display: flex; gap: 4pt; }
+  .stack span {
+    font-size: 7.4pt;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    border: 0.6pt solid var(--rule);
+    border-radius: 2pt;
+    padding: 0.6pt 5pt 0.8pt;
+  }
+  .contact {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+    font-size: 8.15pt;
+    line-height: 1.62;
+    color: var(--text);
+  }
+  .contact a { color: var(--text); }
+  .contact .loc { color: var(--muted); }
+
+  /* ---------- Sections on a two-column grid ---------- */
+  section {
+    display: grid;
+    grid-template-columns: var(--rail) 1fr;
+    column-gap: var(--gutter);
+    padding-top: 9.5pt;
+    margin-top: 10pt;
+    border-top: 0.6pt solid var(--rule);
+  }
+  header + section { border-top: none; margin-top: 0; padding-top: 12pt; }
+  section > h2 {
+    margin: 0;
+    padding-top: 1.6pt;
+    font-size: 7.3pt;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.35;
+    break-after: avoid;
+  }
+  .body { min-width: 0; }
+
+  /* Profile */
+  .lead { font-size: 10.4pt; line-height: 1.4; font-weight: 500; color: var(--ink); letter-spacing: -0.006em; margin-bottom: 4pt; }
+  .traits { display: block; font-size: 9.4pt; font-weight: 500; color: var(--accent); letter-spacing: 0.005em; margin-top: 1pt; }
+  section.continued { break-before: page; border-top: none; margin-top: 0; padding-top: 0; }
+  section > h2 small { display: block; margin-top: 2pt; font-size: 6.8pt; font-weight: 500; letter-spacing: 0.12em; color: var(--faint); }
+  .summary { color: var(--text); }
+
+  /* ---------- Experience ---------- */
+  .job { break-inside: avoid; }
+  .job + .job { margin-top: 11pt; }
+  .job-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
+  .org { font-size: 10.3pt; font-weight: 600; color: var(--ink); letter-spacing: -0.008em; }
+  .dates { font-size: 8.3pt; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  .job-sub { margin-top: 0.5pt; font-size: 9.05pt; }
+  .role { font-weight: 500; color: var(--accent); }
+  .sep { color: var(--faint); padding: 0 4pt; }
+  .meta { color: var(--muted); }
+  .meta a { color: var(--accent); }
+  .context { margin-top: 1.5pt; color: var(--muted); font-style: italic; }
+  .solo { margin-top: 2.5pt; }
+
+  ul.points { list-style: none; margin: 4pt 0 0; padding: 0; }
+  ul.points li { position: relative; padding-left: 10.5pt; margin-top: 2.2pt; }
+  ul.points li::before {
+    content: "";
+    position: absolute;
+    left: 1.5pt;
+    top: 0.6em;
+    width: 3pt;
+    height: 3pt;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.85;
+  }
+  .pkg { font-weight: 500; color: var(--ink); }
+  .link { color: var(--accent); }
+
+  /* ---------- Projects ---------- */
+  .proj { break-inside: avoid; }
+  .proj + .proj { margin-top: 6.5pt; }
+  .proj-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12pt; }
+  .proj-name { font-weight: 600; color: var(--ink); font-size: 9.6pt; }
+  .proj-link { font-size: 8.2pt; color: var(--accent); white-space: nowrap; }
+  .proj p { margin-top: 0.8pt; }
+  .more { margin-top: 7pt; color: var(--muted); }
+  .more a { color: var(--accent); }
+
+  /* ---------- Label / value rows (skills, distinctions) ---------- */
+  .rows { display: grid; grid-template-columns: 0.86in 1fr; column-gap: 10pt; row-gap: 3.2pt; margin: 0; }
+  .item { white-space: nowrap; }
+  .rows dt { font-weight: 600; color: var(--ink); font-size: 8.6pt; padding-top: 0.5pt; }
+  .rows dd { margin: 0; }
+  .dot { color: var(--faint); padding: 0 3pt; }
+
+  .keep { break-inside: avoid; }
+
+  /* ---------- Screen (hosted at metacircu1ar.github.io/resume); print/PDF is unaffected ---------- */
+  .toolbar { display: none; }
+  @media screen {
+    html { background: #eceef1; }
+    body {
+      max-width: 8.5in;
+      margin: 32px auto 48px;
+      padding: 0.56in 0.62in 0.62in;
+      background: #fff;
+      border-radius: 3px;
+      box-shadow: 0 1px 2px rgba(20, 24, 30, 0.06), 0 10px 30px rgba(20, 24, 30, 0.07);
+    }
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin: -0.3in 0 10pt;
+    }
+    .toolbar a {
+      font-size: 8.4pt;
+      font-weight: 600;
+      color: var(--accent);
+      border: 0.75pt solid var(--rule);
+      border-radius: 3pt;
+      padding: 3pt 9pt;
+    }
+    .toolbar a:hover { border-color: var(--accent); }
+    a:hover { text-decoration: underline; text-underline-offset: 2px; }
+    section.continued { border-top: none; margin-top: 11pt; padding-top: 0; }
+    section.continued > h2 { visibility: hidden; }
+  }
+  @media screen and (max-width: 700px) {
+    html { background: #fff; }
+    body { margin: 0; padding: 18px 16px 36px; border-radius: 0; box-shadow: none; font-size: 10pt; }
+    .toolbar { margin: 0 0 12pt; }
+    header { grid-template-columns: 1fr; row-gap: 10pt; }
+    h1 { font-size: 25pt; }
+    .contact { text-align: left; }
+    section { grid-template-columns: 1fr; row-gap: 7pt; }
+    section.continued { margin-top: 12pt; }
+    section.continued > h2 { display: none; }
+    .job-head, .proj-head { flex-wrap: wrap; row-gap: 1pt; }
+    .rows { grid-template-columns: 1fr; row-gap: 1pt; }
+    .rows dd { margin-bottom: 5pt; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="toolbar"><a href="Max_Tikhomirov_Resume.pdf" download>Download PDF</a></nav>
+
+<header>
+  <div>
+    <h1>Max Tikhomirov</h1>
+    <div class="title">AI-first Senior Software Engineer</div>
+    <div class="focus"><span class="item">Cross-platform systems</span> <span class="sep">·</span> <span class="item">AI agent tooling</span> <span class="sep">·</span> <span class="item">Products shipped solo</span></div>
+    <div class="stack" aria-label="Core languages"><span>C++</span><span>Rust</span><span>Elixir</span><span>Swift</span></div>
+  </div>
+  <ul class="contact">
+    <li><a href="mailto:metacircu1ar@icloud.com">metacircu1ar@icloud.com</a></li>
+    <li><a href="https://www.linkedin.com/in/max-tikhomirov-50811a269">linkedin.com/in/max-tikhomirov-50811a269</a></li>
+    <li><a href="https://github.com/metacircu1ar">github.com/metacircu1ar</a></li>
+    <li><a href="https://metacircu1ar.github.io">metacircu1ar.github.io</a></li>
+    <li class="loc">Remote</li>
+  </ul>
+</header>
+
+<section class="keep">
+  <h2>Profile</h2>
+  <div class="body">
+    <p class="lead">I build systems and ship complete products end to end.<span class="traits">Direct, precise, proactive, autonomous.</span></p>
+    <p class="summary">Senior engineer at a US video management company whose clients include SpaceX, Tesla and Bank of America, where I designed and built cross-platform plugin isolation, shared-memory video transport and an AI-assisted engineering environment. Independently, I build products and developer tools: GymFlow, a native SwiftUI iOS app, and Hive, an open-source Rust runtime for persistent Codex and Claude agents. Earlier: aerospace ground-control software and a patented code-generation system. I started programming at 34 with no technical background.</p>
+  </div>
+</section>
+
+<section class="keep">
+  <h2>Distinctions</h2>
+  <div class="body">
+    <dl class="rows">
+      <dt>Patent</dt>
+      <dd><a class="link" href="https://new.fips.ru/registers-doc-view/fips_servlet?DB=RUPAT&amp;DocNumber=2780080&amp;TypeFile=html">RU2780080</a>: granted for a code-generation system I invented, which became core development infrastructure at an aerospace company.</dd>
+      <dt>Certification</dt>
+      <dd>World top&nbsp;10 in two C++ certifications, two years after writing my first line of code.</dd>
+    </dl>
+  </div>
+</section>
+
+<section>
+  <h2>Experience</h2>
+  <div class="body">
+
+    <article class="job">
+      <div class="job-head">
+        <div class="org">US Video Management Systems Provider</div>
+        <div class="dates">Jun 2023 – Present</div>
+      </div>
+      <div class="job-sub"><span class="role">Senior Software Engineer</span><span class="sep">·</span><span class="meta">Remote</span></div>
+      <p class="context">Enterprise video management platform; clients include SpaceX, Tesla and Bank of America.</p>
+      <ul class="points">
+        <li>Designed and built analytics-plugin isolation across Linux, Windows and macOS: plugins moved out of the media server into dedicated, sandboxed, resource-limited hosts with supervision, crash reporting and automatic recovery.</li>
+        <li>Introduced shared-memory video delivery: frames are prepared once and shared read-only across plugin processes, with explicit ownership and bounded memory.</li>
+        <li>Designed asynchronous private IPC carrying the full plugin SDK, so existing plugins run unchanged.</li>
+        <li>Built an AI-assisted engineering environment that automates evidence collection, worktrees, code review, CI investigation and testing; extended it into automated analytics QA, using QA workflows over a distributed network of remote machines.</li>
+        <li>Earlier: built the REST/WebSocket analytics API that opened the plugin SDK beyond C++, and proposed development-process changes adopted company-wide.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <div class="org">GymFlow</div>
+        <div class="dates">2026 – Present</div>
+      </div>
+      <div class="job-sub"><span class="role">Founder &amp; Engineer</span><span class="sep">·</span><span class="meta"><a href="https://gymflowai.fit">gymflowai.fit</a><span class="sep">·</span><a href="https://apps.apple.com/us/app/gymflowai-workout-planner/id6759515368">App Store</a></span></div>
+      <p class="context">Designed, built and launched GymFlow, an iOS workout app with AI-generated workouts.</p>
+      <ul class="points">
+        <li>Owned the full product: native SwiftUI client, Elixir/Phoenix backend, PostgreSQL, RevenueCat subscriptions, OpenAI integration and iOS Live Activities.</li>
+        <li>Took it from spec to App Store approval.</li>
+        <li>Launched on React Native, then rewrote the client from scratch in SwiftUI: client size improved&nbsp;<span class="fig">3×</span>, with a native look and feel.</li>
+        <li>Open-sourced four packages extracted from the codebase: <a class="pkg" href="https://hex.pm/packages/idempotency_kit">idempotency_kit</a>, <a class="pkg" href="https://hex.pm/packages/mobile_id_token">mobile_id_token</a> and <a class="pkg" href="https://hex.pm/packages/revenue_cat">revenue_cat</a> (Hex), and <a class="pkg" href="https://www.npmjs.com/package/idempotent-fetch">idempotent-fetch</a> (npm).</li>
+      </ul>
+    </article>
+
+  </div>
+</section>
+
+<section class="continued">
+  <h2>Experience<small>Continued</small></h2>
+  <div class="body">
+
+    <article class="job">
+      <div class="job-head">
+        <div class="org">UWCA</div>
+        <div class="dates">Jul 2020 – Jun 2023</div>
+      </div>
+      <div class="job-sub"><span class="role">C++/Scala Developer</span><span class="sep">·</span><span class="meta">Remote</span></div>
+      <p class="context">Ground-control software for drones and manned aircraft.</p>
+      <ul class="points">
+        <li>Architected and built the ground-control GUI from scratch in C++ (Qt Widgets/QML) and shipped it to production deployments.</li>
+        <li>Designed a JSON-spec-to-C++ code-generation system with a transparent network layer, granted as patent <a class="link" href="https://new.fips.ru/registers-doc-view/fips_servlet?DB=RUPAT&amp;DocNumber=2780080&amp;TypeFile=html">RU2780080</a>. Prototyped in about <span class="fig">1,000 lines</span> of Haskell, it replaced <span class="fig">tens of thousands of lines</span> of hand-written C++ and became core development infrastructure.</li>
+        <li>Debugged a live avionics integration from video recordings of logs on an air-gapped onboard machine, and found and fixed errors in the protocol specification.</li>
+        <li>Built ScalaJS map-editor tooling and Java gRPC clients for hardware devices.</li>
+        <li>Cut Scala environment setup from a <span class="fig">2–4 hour</span> assisted process to <span class="fig">30 minutes</span> of self-service.</li>
+        <li>Mentored an intern with no prior experience into a full-time role and later promotion; interviewed C++ candidates.</li>
+      </ul>
+    </article>
+
+    <article class="job">
+      <div class="job-head">
+        <div class="org">Tensor (SBIS)</div>
+        <div class="dates">Sep 2018 – Nov 2019</div>
+      </div>
+      <div class="job-sub"><span class="role">C++ Developer</span></div>
+      <p class="solo">Server-side development for a large enterprise-management platform, plus desktop products for Windows, macOS and Linux, with supporting Python and Bash tooling.</p>
+    </article>
+
+  </div>
+</section>
+
+<section>
+  <h2>Projects</h2>
+  <div class="body">
+    <div class="proj">
+      <div class="proj-head">
+        <span class="proj-name">Hive</span>
+        <a class="proj-link" href="https://github.com/metacircu1ar/hive">github.com/metacircu1ar/hive</a>
+      </div>
+      <p>Open-source runtime that turns Codex and Claude into a persistent team of agents: an orchestrator plus a shared brain with semantic search.</p>
+    </div>
+    <div class="proj">
+      <div class="proj-head">
+        <span class="proj-name">hive_skills</span>
+        <a class="proj-link" href="https://github.com/metacircu1ar/hive_skills">github.com/metacircu1ar/hive_skills</a>
+      </div>
+      <p>Playbooks that make AI coding agents plan, build, review and audit like a disciplined senior team. The review protocol is model-checked in TLA+.</p>
+    </div>
+    <div class="proj">
+      <div class="proj-head">
+        <span class="proj-name">atomic-fs</span>
+        <a class="proj-link" href="https://github.com/metacircu1ar/atomic-fs">github.com/metacircu1ar/atomic-fs</a>
+      </div>
+      <p>Crash-safe file writes for Rust. The storage foundation under Hive.</p>
+    </div>
+    <div class="proj">
+      <div class="proj-head">
+        <span class="proj-name">blazing-radix</span>
+        <a class="proj-link" href="https://github.com/metacircu1ar/blazing-radix">github.com/metacircu1ar/blazing-radix</a>
+      </div>
+      <p>The fastest radix sort in Rust: beats every leading crate on every benchmark. Zero dependencies.</p>
+    </div>
+    <p class="more">More open-source skill libraries and Rust, Elixir and JavaScript libraries: <a href="https://github.com/metacircu1ar">github.com/metacircu1ar</a></p>
+  </div>
+</section>
+
+<section class="keep">
+  <h2>Skills</h2>
+  <div class="body">
+    <dl class="rows">
+      <dt>Languages</dt>
+      <dd><span class="item">C++</span><span class="dot">·</span><wbr><span class="item">Rust</span><span class="dot">·</span><wbr><span class="item">Swift</span><span class="dot">·</span><wbr><span class="item">Elixir</span><span class="dot">·</span><wbr><span class="item">Haskell</span><span class="dot">·</span><wbr><span class="item">Scala</span><span class="dot">·</span><wbr><span class="item">Java</span><span class="dot">·</span><wbr><span class="item">Python</span><span class="dot">·</span><wbr><span class="item">JavaScript</span><span class="dot">·</span><wbr><span class="item">Bash</span></dd>
+      <dt>Systems</dt>
+      <dd><span class="item">Linux, Windows and macOS</span><span class="dot">·</span><wbr><span class="item">process isolation and sandboxing</span><span class="dot">·</span><wbr><span class="item">IPC</span><span class="dot">·</span><wbr><span class="item">shared memory</span><span class="dot">·</span><wbr><span class="item">supervision and crash recovery</span><span class="dot">·</span><wbr><span class="item">Qt Widgets/QML</span></dd>
+      <dt>AI tooling</dt>
+      <dd><span class="item">agent runtimes (Codex, Claude)</span><span class="dot">·</span><wbr><span class="item">AI-assisted code review</span><span class="dot">·</span><wbr><span class="item">CI investigation and testing</span><span class="dot">·</span><wbr><span class="item">automated QA</span><span class="dot">·</span><wbr><span class="item">semantic search</span><span class="dot">·</span><wbr><span class="item">TLA+</span></dd>
+      <dt>Product</dt>
+      <dd><span class="item">SwiftUI</span><span class="dot">·</span><wbr><span class="item">React Native</span><span class="dot">·</span><wbr><span class="item">Elixir/Phoenix</span><span class="dot">·</span><wbr><span class="item">PostgreSQL</span><span class="dot">·</span><wbr><span class="item">RevenueCat</span><span class="dot">·</span><wbr><span class="item">OpenAI integration</span><span class="dot">·</span><wbr><span class="item">iOS Live Activities</span><span class="dot">·</span><wbr><span class="item">REST/WebSocket</span><span class="dot">·</span><wbr><span class="item">gRPC</span></dd>
+    </dl>
+  </div>
+</section>
+
+
+</body>
+</html>
